@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <script src="dist/time-to-interactive.min.js"></script>
+  <title>Time To Interactive</title>
+</head>
+
+<body>
+  <div>Time to Interactive for the page: </div><span id='tti'></span>
+  <div>Time to Interacive for the action: </div><span id='rtti'></span>
+  <button onclick="changeFrame()"></button>
+  <div>Iframe content:</div>
+  <iframe id="contentFrame" style="border: none; height: 500px; width: 500px; display: flex" scrolling="none" src="https://github.com/gauravbehere/time-to-interactive"></iframe>
+  <script>
+    window.getPageTTI.then(function (e) {
+      document.querySelector('#tti').innerHTML = e + "ms";
+    });
+    var changeFrame = function () {
+      getReferentialTTI().then(function (e) {
+        document.querySelector('#rtti').innerHTML = e + "ms";
+      });
+      document.querySelector('#contentFrame').setAttribute('src', "https://www.google.com/");
+    }
+  </script>
+</body>
+
+</html>

@@ -5,6 +5,8 @@
 
 Utility to report time to interactive(tti) for Real User Monitoring (RUM) for web applications
 
+[![npm version](https://badge.fury.io/js/time-to-interactive.svg)](https://badge.fury.io/js/time-to-interactive)
+
 #### Demo
 https://gauravbehere.github.io/time-to-interactive/
 

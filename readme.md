@@ -5,6 +5,9 @@
 
 Utility to report time to interactive for Real User Monitoring (RUM)
 
+#### Demo
+https://gauravbehere.github.io/time-to-interactive/
+
 ###  APIs
 #### window.getPageTTI
 Contains a promise which on resolution reports the TTI value for the page.
@@ -47,8 +50,8 @@ ___
 
 
 ### A word from the author
-The term time to interactive can be subjective & there could be difference ways to approach it.
-I have tried to get a balance between how Google Chrome's lighthouse does it & how it is done by Boomerang by Akamai. Research & analysis of statstics reported as TTI suggests that, it can vary drastically between  browses & platforms. As the LongTaskAPI is yet to be standardized by the browsers, we rely on manual polling to see if CPU was busy.
+The term, time to interactive can be subjective & there could be different ways to approach it.
+I have tried to get a balance between how Google Chrome's lighthouse does it & how it is done by Akamai's Boomerang. Research & analysis of statstics reported as TTI suggests that, it can vary drastically between browses & platforms. As the LongTaskAPI is yet to be standardized by the browsers, we rely on manual polling to see if CPU was busy.
 I also recommend usage of another metric which is "first-input-delay", which is quite a standard now.
 
 #### Licence

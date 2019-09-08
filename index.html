@@ -3,30 +3,59 @@
 <head>
   <script src="dist/time-to-interactive.min.js"></script>
   <title>Time To Interactive</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    header,
+    .page-header {
+      background: #000;
+      color: #fff;
+      width: calc(100% - 40px);
+      height: auto;
+      font-size: 16px;
+      padding: 20px;
+    }
+
+    .content{
+      padding: 20px;
+    }
+  </style>
 </head>
 
 <body>
-  <div>Time to Interactive for the page: </div><span id='tti'></span>
-  <br/>
-  <div>Time to Interacive for the action: </div><span id='rtti'></span>
-  <br/>
-  <button onclick="changeFrame()">Do Some Action</button>
-  <br/>
-  <div id='frameContent'>Iframe content: <br/>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/lWtMjkAQa9w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen></iframe>
-  </div>
-  <script>
-    window.getPageTTI.then(function (e) {
-      document.querySelector('#tti').innerHTML = e + "ms";
-    });
-    var changeFrame = function () {
-      getReferentialTTI().then(function (e) {
-        document.querySelector('#rtti').innerHTML = e + "ms";
+  <div class="page-header">Time to Interactive</div>
+  <header>
+    Demo uses two APIs exposed in UMD fashion:<br /><br />
+    1. <strong>getPageTTI</strong>: This is the time to interactive value reported for the entire page.<br />
+    2. <strong>getReferentialTTI</strong>: This is the time to interactive value reported for an action, this could be
+    a click action, route navigations for single page applications etc.
+  </header>
+  <div class="content">
+    <div>Time to Interactive for the page: </div><span id='tti'></span>
+    <br /><br />
+    <div>Time to Interacive for the action: </div><span id='rtti'></span>
+    <br /><br />
+    <button onclick="changeFrame()">Do Some Action</button>
+    <br /><br />
+    <div id='frameContent'>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/lWtMjkAQa9w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+    <script>
+      window.getPageTTI.then(function (e) {
+        document.querySelector('#tti').innerHTML = e + "ms";
       });
-      document.querySelector('#frameContent').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/jjJ7Qi1MLVQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-    }
-  </script>
+      var changeFrame = function () {
+        getReferentialTTI().then(function (e) {
+          document.querySelector('#rtti').innerHTML = e + "ms";
+        });
+        document.querySelector('#frameContent').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/jjJ7Qi1MLVQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+      }
+    </script>
+  </div>
 </body>
 
 </html>

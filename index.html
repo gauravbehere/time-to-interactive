@@ -9,8 +9,10 @@
   <div>Time to Interactive for the page: </div><span id='tti'></span>
   <div>Time to Interacive for the action: </div><span id='rtti'></span>
   <button onclick="changeFrame()"></button>
-  <div>Iframe content:</div>
-  <iframe id="contentFrame" style="border: none; height: 500px; width: 500px; display: flex" scrolling="none" src="https://github.com/gauravbehere/time-to-interactive"></iframe>
+  <div id='frameContent'>Iframe content:
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/lWtMjkAQa9w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
   <script>
     window.getPageTTI.then(function (e) {
       document.querySelector('#tti').innerHTML = e + "ms";
@@ -19,7 +21,7 @@
       getReferentialTTI().then(function (e) {
         document.querySelector('#rtti').innerHTML = e + "ms";
       });
-      document.querySelector('#contentFrame').setAttribute('src', "https://www.google.com/");
+      document.querySelector('#frameContent').innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/jjJ7Qi1MLVQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
     }
   </script>
 </body>

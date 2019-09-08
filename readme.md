@@ -53,6 +53,8 @@ I also recommend usage of another metric which is "first-input-delay", which is 
 
 #### Licence
 MIT
+
 Author: Gaurav Behere, gaurav.techgeek@gmail.com
+
 Feel free to raise a PR, if you see a scope of improvement :)
 

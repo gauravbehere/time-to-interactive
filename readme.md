@@ -3,7 +3,7 @@
 
 ---
 
-Utility to report time to interactive for Real User Monitoring (RUM)
+Utility to report time to interactive(tti) for Real User Monitoring (RUM) for web applications
 
 #### Demo
 https://gauravbehere.github.io/time-to-interactive/
@@ -12,7 +12,7 @@ https://gauravbehere.github.io/time-to-interactive/
 #### window.getPageTTI
 Contains a promise which on resolution reports the TTI value for the page.
 #### window.getReferentialTTI()
-Calling this on a event returns a promise which on resolution reports TTI for that event.
+Calling this on an event returns a promise which on resolution reports TTI for that event.
 > Referential TTI can be fired from the click event, route navigations when you render a component or an event after which you want to check how much is the time to interactive for that action
 
 ### Algorithm
@@ -23,7 +23,7 @@ the number of CPU cycles for which CPU was busy.
  2. If it is available we report TTI as reported by tti-polyfill.
  3. There are instances where TTI reported by tti-polyfill is less than time for loadEventEnd, thus we return max of the two.
 4. If PerformanceLongTaskTiming is not available we fall back to manual polling to check if CPU is busy.
-5. As we get a window of 500ms for which CPU was idle, we report TTI based on the number of cycles we had to wait to see a idle 500ms window.
+5. As we get a window of 500ms for which CPU was idle, we report TTI based on the number of cycles we had to wait to see an idle 500ms window.
 6. We look for the idle window after loadEventEnd has happened so that we are also waiting for network idle state.
 
 

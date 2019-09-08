@@ -3,7 +3,7 @@
  * Utility to report time to interactive for Real User Monitoring (RUM)
  * 
  * Usage: 
- * window.getTimeToInteractive.then(data => //data is the TTI value for the page)
+ * window.getPageTTI.then(data => //data is the TTI value for the page)
  * window.getReferentialTTI().then(data => //data is the TTI value for a section/component)
  * 
  * Referential TTI can be fired from the click event, route navigations when you render a component or an event 

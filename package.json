@@ -1,13 +1,13 @@
 {
   "name": "time-to-interactive",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "Utility to report time to interactive for Real User Monitoring (RUM)",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gauravbehere/time-to-interactive.git"
   },
-  "homepage": "",
+  "homepage": "https://gauravbehere.github.io/time-to-interactive/",
   "keywords": [
     "time to interactive",
     "performance mertic",
@@ -30,6 +30,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-loader": "^8.0.6",
+    "filemanager-webpack-plugin": "^2.0.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"

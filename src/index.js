@@ -130,3 +130,6 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
   }
   )();
 })();
+
+exports = module.exports = {};
+export default {};

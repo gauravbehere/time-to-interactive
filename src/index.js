@@ -104,11 +104,9 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
     return new Promise((resolve, reject) => {
       if ('PerformanceLongTaskTiming' in window) {
         !function () {
-          if ('PerformanceLongTaskTiming' in window) {
-            let g = window.__tti = { e: [] };
-            g.o = new PerformanceObserver(function (l) { g.e = g.e.concat(l.getEntries()) });
-            g.o.observe({ entryTypes: ['longtask'] })
-          }
+          let g = window.__tti = { e: [] };
+          g.o = new PerformanceObserver(function (l) { g.e = g.e.concat(l.getEntries()) });
+          g.o.observe({ entryTypes: ['longtask'] })
         }();
         ttiPolyfill.getFirstConsistentlyInteractive()
           .then((data) => {

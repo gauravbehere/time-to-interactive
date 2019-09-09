@@ -43,7 +43,7 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
   const CPU_IDLE_TTI_WINDOW = 500;
 
   const MIN_CPU_IDLE_INTERVALS = CPU_IDLE_TTI_WINDOW / CPU_BUSY_POLLING_INTERVAL;
-  const timing = performance.timing;
+  const timing = window.performance.timing;
 
   const getLoadTime = function () {
     //If load has not happened, the returned value will be negative
@@ -59,7 +59,7 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
     return new Promise((resolve, reject) => {
       const checkIfCPUIsBusy = () => {
         noOfCyclesCPUWasBusy++;
-        let timeDiff = performance.now() - previousHit;
+        let timeDiff = window.performance.now() - previousHit;
         if (timeDiff > (CPU_BUSY_POLLING_INTERVAL + CPU_BUSY_ALLOWED_DEVIATION)) {
           successIntervals = 0;
         }
@@ -76,9 +76,9 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
             }
           }
         }
-        previousHit = performance.now();
+        previousHit = window.performance.now();
       }
-      previousHit = performance.now();
+      previousHit = window.performance.now();
       longTaskPollInterval = setInterval(checkIfCPUIsBusy, CPU_BUSY_POLLING_INTERVAL);
 
       setTimeout(() => {
@@ -87,46 +87,49 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
     });
   }
 
-  window.getReferentialTTI = () => {
-    return new Promise((resolve, reject) => {
-      getCPUBusyInterval().then((tti) => {
-        resolve(tti);
-      }).catch(() => {
-        reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
-      });
-    })
-  };
-
-  window.getPageTTI = (() => {
-    /*
-    * Using LongTask API if supported
-    */
-    return new Promise((resolve, reject) => {
-      if ('PerformanceLongTaskTiming' in window) {
-        !function () {
-          let g = window.__tti = { e: [] };
-          g.o = new PerformanceObserver(function (l) { g.e = g.e.concat(l.getEntries()) });
-          g.o.observe({ entryTypes: ['longtask'] })
-        }();
-        ttiPolyfill.getFirstConsistentlyInteractive()
-          .then((data) => {
-            resolve(Math.max(data, getLoadTime()));
-          }).catch(() => {
-            reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
-          });;
-      }
-      else {
-        /**
-         * Falling back to manually polling for long tasks.
-         */
+  if (!window.getReferentialTTI) {
+    window.getReferentialTTI = () => {
+      return new Promise((resolve, reject) => {
         getCPUBusyInterval().then((tti) => {
-          // This calculation makes sure that TTI can't be lesser than time for load(loadEventEnd)
-          resolve(parseInt(getLoadTime()) + parseInt(tti));
+          resolve(tti);
         }).catch(() => {
           reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
         });
-      }
-    });
+      })
+    };
   }
-  )();
+  if (!window.getPageTTI) {
+    window.getPageTTI = (() => {
+      /*
+      * Using LongTask API if supported
+      */
+      return new Promise((resolve, reject) => {
+        if ('PerformanceLongTaskTiming' in window) {
+          !function () {
+            let g = window.__tti = { e: [] };
+            g.o = new PerformanceObserver(function (l) { g.e = g.e.concat(l.getEntries()) });
+            g.o.observe({ entryTypes: ['longtask'] })
+          }();
+          ttiPolyfill.getFirstConsistentlyInteractive()
+            .then((data) => {
+              resolve(Math.max(data, getLoadTime()));
+            }).catch(() => {
+              reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
+            });;
+        }
+        else {
+          /**
+           * Falling back to manually polling for long tasks.
+           */
+          getCPUBusyInterval().then((tti) => {
+            // This calculation makes sure that TTI can't be lesser than time for load(loadEventEnd)
+            resolve(parseInt(getLoadTime()) + parseInt(tti));
+          }).catch(() => {
+            reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
+          });
+        }
+      });
+    }
+    )();
+  }
 })();

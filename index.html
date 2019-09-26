@@ -22,6 +22,18 @@
     .content{
       padding: 20px;
     }
+
+    footer {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 30px;
+      width: 100%;
+      text-align: center;
+      background-color: #000;
+      color: #FFF;
+      padding: 10px;
+    }
   </style>
 </head>
 
@@ -38,7 +50,7 @@
     <br /><br />
     <div>Time to Interacive for the action: </div><span id='rtti'></span>
     <br /><br />
-    <button onclick="changeFrame()">Do Some Action</button>
+    <button onclick="changeFrame()" style="height: 25px; width: auto">Perform Action</button>
     <br /><br />
     <div id='frameContent'>
       <iframe width="560" height="315" src="https://www.youtube.com/embed/lWtMjkAQa9w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -56,6 +68,9 @@
       }
     </script>
   </div>
+  <footer>
+    Source Code: <a style="color:#FFF" href="https://github.com/gauravbehere/time-to-interactive">https://github.com/gauravbehere/time-to-interactive</a>
+  </footer>
 </body>
 
 </html>

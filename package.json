@@ -17,6 +17,7 @@
     "cpu busy cycles"
   ],
   "scripts": {
+    "test":  "npm run build",
     "build": "webpack"
   },
   "author": "Gaurav Behere, gaurav.techgeek@gmail.com",

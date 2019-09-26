@@ -1,2 +1,4 @@
 node_modules
 webpack.config.js
+travis.yml
+_config.yml

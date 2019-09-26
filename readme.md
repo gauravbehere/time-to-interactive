@@ -51,6 +51,10 @@ ___
  window.getReferentialTTI().then(data => //data is the TTI value for a section/component)
  ```
 
+#### Browser Compatibility
+As it includes polyfill for Promises & tti-polyfill, there is no browser based compatibility matrix as such.
+Tested with Chrome, Mozilla Firefox, Safari, Edge & IE
+
 
 ### A word from the author
 The term, time to interactive can be subjective & there could be different ways to approach it.

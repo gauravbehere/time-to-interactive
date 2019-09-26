@@ -51,9 +51,14 @@ ___
  window.getReferentialTTI().then(data => //data is the TTI value for a section/component)
  ```
 
+#### This metrics can be send to custom analytics integrations like Google Analytics to capture RUM data at large scale.
+
+
+
 ### Browser Compatibility
 As it includes polyfill for Promises & tti-polyfill, there is no browser based compatibility matrix as such.
 Tested with Chrome, Mozilla Firefox, Safari, Edge & IE
+
 
 
 ### A word from the author

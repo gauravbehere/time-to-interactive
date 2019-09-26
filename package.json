@@ -1,6 +1,6 @@
 {
   "name": "time-to-interactive",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "description": "Utility to report time to interactive for Real User Monitoring (RUM)",
   "main": "index.js",
   "repository": {

@@ -35,6 +35,7 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
    */
   const CPU_BUSY_POLLING_INTERVAL = 50;
 
+  // Adding a margin to allow IE/EDGE to clamp polling
   const CPU_BUSY_ALLOWED_DEVIATION = 5;
 
   /**
@@ -42,7 +43,8 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
    */
   const CPU_IDLE_TTI_WINDOW = 500;
 
-  const MIN_CPU_IDLE_INTERVALS = CPU_IDLE_TTI_WINDOW / CPU_BUSY_POLLING_INTERVAL;
+  const MIN_CPU_IDLE_INTERVALS = parseInt(CPU_IDLE_TTI_WINDOW / CPU_BUSY_POLLING_INTERVAL);
+
   const timing = window.performance.timing;
 
   const getLoadTime = function () {
@@ -50,29 +52,43 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
     return parseFloat(timing.loadEventEnd - timing.navigationStart).toFixed(0);
   }
 
+  /**
+   * Utility to check for how much time CPU is busy
+   */
   const getCPUBusyInterval = () => {
     let previousHit = null;
     let noOfCyclesCPUWasBusy = 0;
     let longTaskPollInterval = null;
     let successIntervals = 0;
-    let tti = null;
+    let busyIntervals = 0;
+    let totalIntervals = 0;
+    let busyTime = null;
     return new Promise((resolve, reject) => {
       const checkIfCPUIsBusy = () => {
-        noOfCyclesCPUWasBusy++;
+        totalIntervals++;
         let timeDiff = window.performance.now() - previousHit;
         if (timeDiff > (CPU_BUSY_POLLING_INTERVAL + CPU_BUSY_ALLOWED_DEVIATION)) {
           successIntervals = 0;
+          busyIntervals++;
         }
         else {
           //If load has not happened, getLoadTime() will be negative, we need to continue polling 
           if (parseInt(getLoadTime()) > 0) {
-            successIntervals++;
+
+            // If CPU busy % is <= 10%, we report success
+            if (parseInt(busyIntervals / totalIntervals) * 100 <= 10) {
+              successIntervals++;
+            }
+            else {
+              successIntervals = 0;
+            }
+
             if (successIntervals === MIN_CPU_IDLE_INTERVALS) {
-              // For Last MIN_CPU_IDLE_INTERVALS, CPU was idle & we need to subtract that interval 
-              noOfCyclesCPUWasBusy = noOfCyclesCPUWasBusy - MIN_CPU_IDLE_INTERVALS;
+              // For last successIntervals, CPU was idle & we need to subtract those intervals
+              noOfCyclesCPUWasBusy = totalIntervals - successIntervals;
               clearInterval(longTaskPollInterval);
-              tti = parseInt(noOfCyclesCPUWasBusy * CPU_BUSY_POLLING_INTERVAL);
-              resolve(tti);
+              busyTime = parseInt(noOfCyclesCPUWasBusy * CPU_BUSY_POLLING_INTERVAL);
+              resolve(busyTime);
             }
           }
         }
@@ -82,29 +98,39 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
       longTaskPollInterval = setInterval(checkIfCPUIsBusy, CPU_BUSY_POLLING_INTERVAL);
 
       setTimeout(() => {
-        if (!tti) reject();
+        clearInterval(longTaskPollInterval);
+        if (!busyTime) reject();
       }, TTI_THRESHOLD_TIME);
     });
   }
 
+
+  /**
+   * adding getReferentialTTI to window, if not already present
+   */
   if (!window.getReferentialTTI) {
     window.getReferentialTTI = () => {
       return new Promise((resolve, reject) => {
-        getCPUBusyInterval().then((tti) => {
-          resolve(tti);
+        getCPUBusyInterval().then((busyTime) => {
+          resolve(busyTime);
         }).catch(() => {
           reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
         });
       })
     };
-  }
+  };
+
+
+  /**
+   * adding getPageTTI to window, if not already present
+   */
   if (!window.getPageTTI) {
     window.getPageTTI = (() => {
       /*
       * Using LongTask API if supported
       */
       return new Promise((resolve, reject) => {
-        if ('PerformanceLongTaskTiming' in window) {
+        if ('PerformanceLongTaskTiming' in window && PerformanceObserver in window) {
           !function () {
             let g = window.__tti = { e: [] };
             g.o = new PerformanceObserver(function (l) { g.e = g.e.concat(l.getEntries()) });
@@ -112,6 +138,7 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
           }();
           ttiPolyfill.getFirstConsistentlyInteractive()
             .then((data) => {
+              // This calculation makes sure that TTI can't be lesser than time for load(loadEventEnd)
               resolve(Math.max(data, getLoadTime()));
             }).catch(() => {
               reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
@@ -121,9 +148,9 @@ const ttiPolyfill = require('tti-polyfill/tti-polyfill');
           /**
            * Falling back to manually polling for long tasks.
            */
-          getCPUBusyInterval().then((tti) => {
+          getCPUBusyInterval().then((busyTime) => {
             // This calculation makes sure that TTI can't be lesser than time for load(loadEventEnd)
-            resolve(parseInt(getLoadTime()) + parseInt(tti));
+            resolve(parseInt(getLoadTime()) + parseInt(busyTime));
           }).catch(() => {
             reject("Could not calculate TTI within " + TTI_THRESHOLD_TIME + "ms");
           });

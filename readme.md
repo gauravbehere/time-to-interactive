@@ -51,7 +51,7 @@ ___
  window.getReferentialTTI().then(data => //data is the TTI value for a section/component)
  ```
 
-#### Browser Compatibility
+### Browser Compatibility
 As it includes polyfill for Promises & tti-polyfill, there is no browser based compatibility matrix as such.
 Tested with Chrome, Mozilla Firefox, Safari, Edge & IE
 
